@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../data/models/restaurant.dart';
 
 class RestaurantProvider extends ChangeNotifier {
   // final List<RestaurantModel> _restaurants = [

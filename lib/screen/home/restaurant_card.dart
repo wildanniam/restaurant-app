@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/models/restaurant.dart';
+import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
@@ -15,24 +16,38 @@ class RestaurantCard extends StatelessWidget {
         Navigator.pushNamed(context, '/detail', arguments: restaurant);
       },
       child: Card(
+        color: RestaurantColor.primary.color,
         elevation: 4,
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              const Icon(Icons.restaurant, size: 40),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  restaurant.image,
+                  width: 80,
+                  height: 70,
+                  fit: BoxFit.cover,
+                ),
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(restaurant.name,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: RestaurantColor.white.color)),
                     const SizedBox(height: 4),
                     Text(restaurant.location,
-                        style: const TextStyle(color: Colors.grey)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(color: RestaurantColor.white.color)),
                     const SizedBox(height: 4),
                     Row(
                       children: [

@@ -12,7 +12,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.bold,
     height: 1.11,
     letterSpacing: -2,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// displayMedium Text Style
@@ -21,7 +21,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.w600,
     height: 1.17,
     letterSpacing: -1,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// displaySmall Text Style
@@ -30,7 +30,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.w500,
     height: 1.25,
     letterSpacing: -1,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// headlineLarge Text Style
@@ -39,7 +39,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.bold,
     height: 1.5,
     letterSpacing: -1,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// headlineMedium Text Style
@@ -48,7 +48,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.w500,
     height: 1.2,
     letterSpacing: -1,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// headlineMedium Text Style
@@ -57,7 +57,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.w400,
     height: 1.0,
     letterSpacing: -1,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// titleLarge Text Style
@@ -66,7 +66,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.bold,
     height: 1.2,
     letterSpacing: 1.2,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// titleMedium Text Style
@@ -75,7 +75,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.w400,
     height: 1.2,
     letterSpacing: 1.2,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// titleSmall Text Style
@@ -84,7 +84,7 @@ class TourismTextStyles {
     fontWeight: FontWeight.w300,
     height: 1.2,
     letterSpacing: 1.2,
-    color: RestaurantColor.orange.color,
+    color: RestaurantColor.primary.color,
   );
 
   /// bodyLargeBold Text Style

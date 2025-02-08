@@ -12,6 +12,7 @@ class RestaurantListPage extends StatelessWidget {
     // final restaurants = Provider.of<RestaurantProvider>(context).restaurants;
 
     return Scaffold(
+      backgroundColor: RestaurantColor.white.color,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

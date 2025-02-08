@@ -37,7 +37,7 @@ class RestaurantTheme {
 
   static ThemeData get lightTheme {
     return ThemeData(
-      colorSchemeSeed: RestaurantColor.blue.color,
+      colorSchemeSeed: RestaurantColor.white.color,
       brightness: Brightness.light,
       textTheme: _textTheme,
       useMaterial3: true,
@@ -47,7 +47,7 @@ class RestaurantTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
-      colorSchemeSeed: RestaurantColor.blue.color,
+      colorSchemeSeed: RestaurantColor.primary.color,
       brightness: Brightness.dark,
       textTheme: _textTheme,
       useMaterial3: true,

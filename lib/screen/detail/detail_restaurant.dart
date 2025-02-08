@@ -15,7 +15,8 @@ class DetailRestaurant extends StatelessWidget {
             restaurant.name,
             style: Theme.of(context).textTheme.headlineLarge,
           ),
-          foregroundColor: RestaurantColor.orange.color),
+          foregroundColor: RestaurantColor.primary.color),
+      backgroundColor: RestaurantColor.white.color,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,19 +59,19 @@ class DetailRestaurant extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   SizedBox(height: 16),
-                  Text(
-                    'Menu',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
+                  Text('Menu',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: Colors.black)),
+                  SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      MenuCardWidget(),
-                      MenuCardWidget(),
+                      MenuCardWidget(
+                        restaurant: restaurant,
+                      ),
+                      MenuCardWidget(restaurant: restaurant),
                     ],
                   ),
                 ],
