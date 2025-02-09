@@ -12,24 +12,32 @@ class RestaurantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail', arguments: restaurant);
-      },
+      onTap: onTap,
       child: Card(
-        color: RestaurantColor.primary.color,
-        elevation: 4,
+        color: RestaurantColor.white.color,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: RestaurantColor.primary.color,
+            width: 0.3,
+          ),
+        ),
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  restaurant.image,
-                  width: 80,
-                  height: 70,
-                  fit: BoxFit.cover,
+                borderRadius: BorderRadius.circular(8),
+                child: Hero(
+                  tag: restaurant.pictureId,
+                  child: Image.network(
+                    "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
+                    width: 80,
+                    height: 70,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -41,13 +49,22 @@ class RestaurantCard extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge
-                            ?.copyWith(color: RestaurantColor.white.color)),
+                            ?.copyWith(color: RestaurantColor.primary.color)),
                     const SizedBox(height: 4),
-                    Text(restaurant.location,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: RestaurantColor.white.color)),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.place,
+                          color: RestaurantColor.grey1.color,
+                        ),
+                        Text(restaurant.city,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    color: RestaurantColor.primary.color)),
+                      ],
+                    ),
                     const SizedBox(height: 4),
                     Row(
                       children: [

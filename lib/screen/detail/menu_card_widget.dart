@@ -1,47 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/models/restaurant.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
+import '../../data/models/restaurant_detail_response.dart';
+
 class MenuCardWidget extends StatelessWidget {
-  const MenuCardWidget({super.key, required this.restaurant});
-  final Restaurant restaurant;
+  final RestaurantDetailResponse restaurant;
+  final String namaMenu;
+  final String type;
+  const MenuCardWidget(
+      {super.key,
+      required this.restaurant,
+      required this.namaMenu,
+      required this.type});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 150,
-      height: 160,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: RestaurantColor.primary.color,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 8,
+      child: IntrinsicHeight(
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              restaurant.image,
-              width: 80,
-              height: 70,
-              fit: BoxFit.cover,
+          color: type == 'Makanan' ? Colors.orange[100] : Colors.blue[100],
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  type,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: type == 'Makanan' ? Colors.orange : Colors.blue,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  namaMenu,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Flexible(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 8),
-          Text('Menu',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: RestaurantColor.white.color,
-                  fontWeight: FontWeight.w500)),
-          SizedBox(height: 4),
-          Text('IDR 15.000',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(color: Colors.black)),
-        ],
+        ),
       ),
     );
   }

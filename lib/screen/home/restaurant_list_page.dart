@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/models/restaurant.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/models/restaurant_list_response.dart';
 import 'package:restaurant_app/screen/home/restaurant_card.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
-class RestaurantListPage extends StatelessWidget {
+class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // final restaurants = Provider.of<RestaurantProvider>(context).restaurants;
+  State<RestaurantListPage> createState() => _RestaurantListPageState();
+}
 
+class _RestaurantListPageState extends State<RestaurantListPage> {
+  late Future<RestaurantListResponse> _restaurantListRespon;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _restaurantListRespon = ApiServices().getRestaurantList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: RestaurantColor.white.color,
       body: SafeArea(
@@ -23,25 +35,63 @@ class RestaurantListPage extends StatelessWidget {
                 "Restaurant",
                 style: Theme.of(context).textTheme.displayMedium,
               ),
-              Text(
-                "Recommendation Restaurant For U",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.normal,
-                    ),
+              Row(
+                children: [
+                  Text(
+                    "Recommendation Restaurant For U",
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.normal,
+                        ),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Icon(
+                    Icons.favorite_sharp,
+                    color: Colors.red,
+                  )
+                ],
               ),
               SizedBox(
                 height: 12,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: restaurantList.length,
-                  itemBuilder: (context, index) {
-                    final restaurant = restaurantList[index];
-                    return RestaurantCard(
-                        restaurant: restaurant,
-                        onTap: () => Navigator.pushNamed(
-                            context, NavigationRoute.detailRoute.name,
-                            arguments: restaurant));
+                child: FutureBuilder(
+                  future: _restaurantListRespon,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      case ConnectionState.done:
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        }
+
+                        final listOfRestaurant = snapshot.data!.restaurants;
+                        return ListView.builder(
+                          itemCount: listOfRestaurant.length,
+                          itemBuilder: (context, index) {
+                            final restaurant = listOfRestaurant[index];
+
+                            return RestaurantCard(
+                              restaurant: restaurant,
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  NavigationRoute.detailRoute.name,
+                                  arguments: restaurant.id,
+                                );
+                              },
+                            );
+                          },
+                        );
+                      default:
+                        return const SizedBox();
+                    }
                   },
                 ),
               ),

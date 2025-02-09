@@ -11,8 +11,10 @@ enum RestaurantColor {
   warning("Warning", Color(0xFFF99500)),
 
   // Produk-related (Rekomendasi palet dengan nuansa orange yang lebih netral)
-  produkBackground("Produk Background",
-      Color(0xFFFCE5CD)), // Warna latar produk bernuansa orange muda
+  produkBackground(
+      "Produk Background",
+      Color.fromARGB(
+          255, 250, 183, 95)), // Warna latar produk bernuansa orange muda
   produkAccent("Produk Accent",
       Color(0xFFFFAB66)), // Aksen produk dengan orange yang lebih terang
   produkShadow("Produk Shadow",

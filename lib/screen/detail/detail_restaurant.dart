@@ -1,84 +1,61 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/models/restaurant.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/models/restaurant_detail_response.dart';
+import 'package:restaurant_app/screen/detail/body_of_detail_screen_widget.dart';
 import 'package:restaurant_app/screen/detail/menu_card_widget.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
-class DetailRestaurant extends StatelessWidget {
-  const DetailRestaurant({super.key, required this.restaurant});
-  final Restaurant restaurant;
+class DetailRestaurant extends StatefulWidget {
+  const DetailRestaurant({super.key, required this.restaurantID});
+  final String restaurantID;
+
+  @override
+  State<DetailRestaurant> createState() => _DetailRestaurantState();
+}
+
+class _DetailRestaurantState extends State<DetailRestaurant> {
+  late Future<RestaurantDetail> _futureRestaurantDetail;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _futureRestaurantDetail =
+        ApiServices().getRestaurantDetail(widget.restaurantID);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            restaurant.name,
+            "Restaurant",
             style: Theme.of(context).textTheme.headlineLarge,
           ),
           foregroundColor: RestaurantColor.primary.color),
       backgroundColor: RestaurantColor.white.color,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              restaurant.image,
-              width: double.infinity,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    restaurant.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        restaurant.location,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin bibendum nunc ut magna tincidunt, et fermentum orci varius.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  SizedBox(height: 16),
-                  Text('Menu',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(color: Colors.black)),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      MenuCardWidget(
-                        restaurant: restaurant,
-                      ),
-                      MenuCardWidget(restaurant: restaurant),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: FutureBuilder(
+        future: _futureRestaurantDetail,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              }
+              final restaurantData = snapshot.data!.restaurant;
+              return BodyOfDetailScreenWidget(restaurant: restaurantData);
+            default:
+              return const SizedBox();
+          }
+        },
       ),
     );
   }
