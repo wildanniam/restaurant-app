@@ -22,6 +22,23 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
     Future.microtask(() {
       context.read<RestaurantListProvider>().fetchListRestaurant();
     });
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.trim();
+    if (query.isNotEmpty) {
+      context.read<RestaurantListProvider>().searchRestaurant(query);
+    } else {
+      // Jika kosong, tampilkan daftar restoran default
+      context.read<RestaurantListProvider>().fetchListRestaurant();
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,22 +100,26 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                           ),
                         ),
                       RestaurantListLoadedState(data: var restaurantList) =>
-                        ListView.builder(
-                          itemCount: restaurantList.length,
-                          itemBuilder: (context, index) {
-                            final restaurant = restaurantList[index];
-                            return RestaurantCard(
-                              restaurant: restaurant,
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  NavigationRoute.detailRoute.name,
-                                  arguments: restaurant.id,
-                                );
-                              },
-                            );
-                          },
-                        ),
+                        restaurantList.isEmpty
+                            ? const Center(
+                                child: Text('No restaurants found.'),
+                              )
+                            : ListView.builder(
+                                itemCount: restaurantList.length,
+                                itemBuilder: (context, index) {
+                                  final restaurant = restaurantList[index];
+                                  return RestaurantCard(
+                                    restaurant: restaurant,
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        NavigationRoute.detailRoute.name,
+                                        arguments: restaurant.id,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                       RestaurantListErrorState(error: var message) => Center(
                           child: Text(message),
                         ),
