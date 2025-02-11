@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/models/restaurant_list_response.dart';
+import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/screen/home/restaurant_card.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
+import 'package:restaurant_app/static/restaurant_list_result_state.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
+import 'package:provider/provider.dart';
 
 class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({super.key});
@@ -13,12 +14,14 @@ class RestaurantListPage extends StatefulWidget {
 }
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
-  late Future<RestaurantListResponse> _restaurantListRespon;
   final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    _restaurantListRespon = ApiServices().getRestaurantList();
+    Future.microtask(() {
+      context.read<RestaurantListProvider>().fetchListRestaurant();
+    });
   }
 
   @override
@@ -31,10 +34,12 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title
               Text(
                 "Restaurant",
                 style: Theme.of(context).textTheme.displayMedium,
               ),
+              SizedBox(height: 8),
               Row(
                 children: [
                   Text(
@@ -43,18 +48,13 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                           fontWeight: FontWeight.normal,
                         ),
                   ),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Icon(
-                    Icons.favorite_sharp,
-                    color: Colors.red,
-                  )
+                  SizedBox(width: 4),
+                  Icon(Icons.favorite_sharp, color: Colors.red),
                 ],
               ),
-              SizedBox(
-                height: 12,
-              ),
+              SizedBox(height: 12),
+
+              // Search Bar
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
@@ -70,31 +70,23 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: 20),
+
+              // Restaurant List
               Expanded(
-                child: FutureBuilder(
-                  future: _restaurantListRespon,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.done:
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text(snapshot.error.toString()),
-                          );
-                        }
-
-                        final listOfRestaurant = snapshot.data!.restaurants;
-                        return ListView.builder(
-                          itemCount: listOfRestaurant.length,
+                child: Consumer<RestaurantListProvider>(
+                  builder: (context, provider, child) {
+                    return switch (provider.resultState) {
+                      RestaurantListLoadingState() => const Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xFFF89721),
+                          ),
+                        ),
+                      RestaurantListLoadedState(data: var restaurantList) =>
+                        ListView.builder(
+                          itemCount: restaurantList.length,
                           itemBuilder: (context, index) {
-                            final restaurant = listOfRestaurant[index];
-
+                            final restaurant = restaurantList[index];
                             return RestaurantCard(
                               restaurant: restaurant,
                               onTap: () {
@@ -106,10 +98,12 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                               },
                             );
                           },
-                        );
-                      default:
-                        return const SizedBox();
-                    }
+                        ),
+                      RestaurantListErrorState(error: var message) => Center(
+                          child: Text(message),
+                        ),
+                      _ => const SizedBox(),
+                    };
                   },
                 ),
               ),

@@ -11,12 +11,6 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final List<Map<String, String>> combinedMenus = [
-    //   ...restaurant.menus.foods
-    //       .map((food) => {'name': food.name, 'type': 'Makanan'}),
-    //   ...restaurant.menus.drinks
-    //       .map((drink) => {'name': drink.name, 'type': 'Minuman'}),
-    // ];
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
