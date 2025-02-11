@@ -14,9 +14,9 @@ class RestaurantListPage extends StatefulWidget {
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
   late Future<RestaurantListResponse> _restaurantListRespon;
+  final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _restaurantListRespon = ApiServices().getRestaurantList();
   }
@@ -54,6 +54,24 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
               ),
               SizedBox(
                 height: 12,
+              ),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search menu...',
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                ),
+              ),
+              SizedBox(
+                height: 20,
               ),
               Expanded(
                 child: FutureBuilder(

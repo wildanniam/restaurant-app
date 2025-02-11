@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/screen/detail/menu_card_widget.dart';
+import 'package:restaurant_app/screen/detail/review_card_widget.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
 import '../../data/models/restaurant_detail_response.dart';
@@ -10,12 +11,12 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> combinedMenus = [
-      ...restaurant.menus.foods
-          .map((food) => {'name': food.name, 'type': 'Makanan'}),
-      ...restaurant.menus.drinks
-          .map((drink) => {'name': drink.name, 'type': 'Minuman'}),
-    ];
+    // final List<Map<String, String>> combinedMenus = [
+    //   ...restaurant.menus.foods
+    //       .map((food) => {'name': food.name, 'type': 'Makanan'}),
+    //   ...restaurant.menus.drinks
+    //       .map((drink) => {'name': drink.name, 'type': 'Minuman'}),
+    // ];
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -87,35 +88,86 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                     .titleLarge
                     ?.copyWith(color: Colors.black)),
             SizedBox(height: 20),
+            _menuMakanan(),
             SizedBox(
-              height: 180,
+              height: 25,
+            ),
+            _menuMinuman(),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Customer Reviews',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(color: Colors.black)),
+                _ratingRestaurant(context, restaurant),
+              ],
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+              height: 140,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: combinedMenus.length,
+                itemCount: restaurant.customerReviews.length,
                 itemBuilder: (context, index) {
-                  final menu = combinedMenus[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: MenuCardWidget(
-                      namaMenu: menu['name']!,
-                      type: menu['type']!,
-                      restaurant: restaurant,
-                    ),
+                  final review = restaurant.customerReviews[index];
+                  return ReviewCardWidget(
+                    name: review.name,
+                    review: review.review,
+                    date: review.date,
                   );
                 },
               ),
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //   children: [
-            //     MenuCardWidget(
-            //       restaurant: restaurant,
-            //     ),
-            //     MenuCardWidget(restaurant: restaurant),
-            //   ],
-            // ),
+            SizedBox(
+              height: 50,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  SizedBox _menuMinuman() {
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: restaurant.menus.drinks.length,
+        itemBuilder: (context, index) {
+          final menu = restaurant.menus.drinks[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: MenuCardWidget(
+              namaMenu: menu.name,
+              restaurant: restaurant,
+              isFood: false,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  SizedBox _menuMakanan() {
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: restaurant.menus.foods.length,
+        itemBuilder: (context, index) {
+          final menu = restaurant.menus.foods[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: MenuCardWidget(
+              namaMenu: menu.name,
+              restaurant: restaurant,
+              isFood: true,
+            ),
+          );
+        },
       ),
     );
   }

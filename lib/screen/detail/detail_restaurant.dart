@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/models/restaurant_detail_response.dart';
 import 'package:restaurant_app/screen/detail/body_of_detail_screen_widget.dart';
-import 'package:restaurant_app/screen/detail/menu_card_widget.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
 class DetailRestaurant extends StatefulWidget {
