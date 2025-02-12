@@ -33,6 +33,7 @@ class RestaurantDetailProvider extends ChangeNotifier {
       String restaurantId, String name, String review) async {
     try {
       await _apiServices.submitReview(restaurantId, name, review);
+      await fetchDetailRestaurant(restaurantId);
       notifyListeners();
     } catch (e) {
       debugPrint("Error adding review: $e");
