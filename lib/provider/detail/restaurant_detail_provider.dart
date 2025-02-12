@@ -28,4 +28,14 @@ class RestaurantDetailProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> addReview(
+      String restaurantId, String name, String review) async {
+    try {
+      await _apiServices.submitReview(restaurantId, name, review);
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error adding review: $e");
+    }
+  }
 }

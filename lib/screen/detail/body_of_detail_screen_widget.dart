@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/screen/detail/add_review_widget.dart';
 import 'package:restaurant_app/screen/detail/menu_card_widget.dart';
 import 'package:restaurant_app/screen/detail/review_card_widget.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
@@ -116,8 +117,10 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 20,
             ),
+            AddReviewWidget(restaurantId: restaurant.id),
+            SizedBox(height: 50),
           ],
         ),
       ),

@@ -48,4 +48,21 @@ class ApiServices {
       return throw Exception(stacktrace);
     }
   }
+
+  Future<void> submitReview(
+      String restaurantId, String name, String review) async {
+    final response = await http.post(
+      Uri.parse("$_baseUrl/review"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "id": restaurantId,
+        "name": name,
+        "review": review,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception("Failed to add review");
+    }
+  }
 }
