@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/screen/detail/add_review_widget.dart';
 import 'package:restaurant_app/screen/detail/menu_card_widget.dart';
 import 'package:restaurant_app/screen/detail/review_card_widget.dart';
-import 'package:restaurant_app/style/colors/restaurant_color.dart';
 
 import '../../data/models/restaurant_detail_response.dart';
 
@@ -25,7 +24,6 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                 child: Image.network(
                   "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
                   width: double.infinity,
-                  // height: 70,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -51,13 +49,8 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                   color: Colors.grey,
                 ),
                 SizedBox(width: 4),
-                Text(
-                  "${restaurant.address}, ${restaurant.city}",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: RestaurantColor.black.color,
-                  ),
-                ),
+                Text("${restaurant.address}, ${restaurant.city}",
+                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
             SizedBox(
@@ -65,11 +58,12 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-                "${restaurant.categories[0].name}, ${restaurant.categories[1].name}",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Colors.black)),
+              restaurant.categories.map((e) => e.name).join(", "),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.black),
+            ),
             SizedBox(height: 10),
             Text(
               restaurant.description,
