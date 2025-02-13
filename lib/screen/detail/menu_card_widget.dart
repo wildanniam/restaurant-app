@@ -23,8 +23,8 @@ class MenuCardWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          color:
-              isFood ? Colors.orange[100] : Colors.blue[100], // Warna otomatis
+          // color:
+          //     isFood ? Colors.orange[100] : Colors.blue[100], // Warna otomatis
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(

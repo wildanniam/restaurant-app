@@ -23,8 +23,6 @@ class ApiServices {
       final response = await http.get(Uri.parse("$_baseUrl/search?q=$query"));
 
       if (response.statusCode == 200) {
-        print(
-            'API Response: ${response.body}'); // Tambahkan ini untuk debugging
         return RestaurantSearchResponse.fromJson(jsonDecode(response.body));
       } else {
         throw Exception(
@@ -44,7 +42,6 @@ class ApiServices {
         return throw Exception('Failed to load Restaurant Detail');
       }
     } catch (e, stacktrace) {
-      print("$e $stacktrace");
       return throw Exception(stacktrace);
     }
   }

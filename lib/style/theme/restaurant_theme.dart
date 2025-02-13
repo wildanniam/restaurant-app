@@ -23,7 +23,7 @@ class RestaurantTheme {
     );
   }
 
-  static AppBarTheme get _appBarTheme {
+  static AppBarTheme _appBarTheme(Brightness brightness) {
     return AppBarTheme(
       toolbarTextStyle: _textTheme.titleLarge,
       shape: const BeveledRectangleBorder(
@@ -32,6 +32,11 @@ class RestaurantTheme {
           bottomRight: Radius.circular(14),
         ),
       ),
+      backgroundColor: brightness == Brightness.dark
+          ? Colors.grey[900]
+          : RestaurantColor.white.color,
+      foregroundColor:
+          brightness == Brightness.dark ? Colors.white : Colors.black,
     );
   }
 
@@ -41,7 +46,9 @@ class RestaurantTheme {
       brightness: Brightness.light,
       textTheme: _textTheme,
       useMaterial3: true,
-      appBarTheme: _appBarTheme,
+      appBarTheme: _appBarTheme(Brightness.light),
+      scaffoldBackgroundColor: Colors.white,
+      cardColor: Colors.white,
     );
   }
 
@@ -49,9 +56,14 @@ class RestaurantTheme {
     return ThemeData(
       colorSchemeSeed: RestaurantColor.primary.color,
       brightness: Brightness.dark,
-      textTheme: _textTheme,
+      textTheme: _textTheme.apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
+      ),
       useMaterial3: true,
-      appBarTheme: _appBarTheme,
+      appBarTheme: _appBarTheme(Brightness.dark),
+      scaffoldBackgroundColor: Colors.black,
+      cardColor: Colors.grey[900],
     );
   }
 }

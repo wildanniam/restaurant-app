@@ -9,10 +9,10 @@ class AddReviewWidget extends StatefulWidget {
   const AddReviewWidget({super.key, required this.restaurantId});
 
   @override
-  _AddReviewWidgetState createState() => _AddReviewWidgetState();
+  AddReviewWidgetState createState() => AddReviewWidgetState();
 }
 
-class _AddReviewWidgetState extends State<AddReviewWidget> {
+class AddReviewWidgetState extends State<AddReviewWidget> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _reviewController = TextEditingController();

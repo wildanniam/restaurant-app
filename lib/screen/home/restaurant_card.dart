@@ -14,7 +14,7 @@ class RestaurantCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: RestaurantColor.white.color,
+        // color: RestaurantColor.white.color,
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),

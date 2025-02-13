@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/screen/home/restaurant_card.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/static/restaurant_list_result_state.dart';
 import 'package:restaurant_app/style/colors/restaurant_color.dart';
-import 'package:provider/provider.dart';
 
 class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({super.key});
@@ -20,7 +20,9 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      context.read<RestaurantListProvider>().fetchListRestaurant();
+      if (mounted) {
+        context.read<RestaurantListProvider>().fetchListRestaurant();
+      }
     });
     _searchController.addListener(_onSearchChanged);
   }
@@ -30,7 +32,6 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
     if (query.isNotEmpty) {
       context.read<RestaurantListProvider>().searchRestaurant(query);
     } else {
-      // Jika kosong, tampilkan daftar restoran default
       context.read<RestaurantListProvider>().fetchListRestaurant();
     }
   }
@@ -44,7 +45,6 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: RestaurantColor.white.color,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -56,7 +56,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                 "Restaurant",
                 style: Theme.of(context).textTheme.displayMedium,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
@@ -65,20 +65,19 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                           fontWeight: FontWeight.normal,
                         ),
                   ),
-                  SizedBox(width: 4),
-                  Icon(Icons.favorite_sharp, color: Colors.red),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.favorite_sharp, color: Colors.red),
                 ],
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               // Search Bar
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search menu...',
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
                   filled: true,
-                  fillColor: Colors.grey[200],
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -87,44 +86,84 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                       const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Restaurant List
               Expanded(
                 child: Consumer<RestaurantListProvider>(
                   builder: (context, provider, child) {
-                    return switch (provider.resultState) {
-                      RestaurantListLoadingState() => const Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xFFF89721),
+                    if (provider.resultState is RestaurantListLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFF89721),
+                        ),
+                      );
+                    } else if (provider.resultState
+                        is RestaurantListLoadedState) {
+                      final restaurantList =
+                          (provider.resultState as RestaurantListLoadedState)
+                              .data;
+                      if (restaurantList.isEmpty) {
+                        return const Center(
+                          child: Text('No restaurants found.'),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: restaurantList.length,
+                        itemBuilder: (context, index) {
+                          final restaurant = restaurantList[index];
+                          return RestaurantCard(
+                            restaurant: restaurant,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                NavigationRoute.detailRoute.name,
+                                arguments: restaurant.id,
+                              );
+                            },
+                          );
+                        },
+                      );
+                    } else if (provider.resultState
+                        is RestaurantListErrorState) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text(
+                              "Failed to load restaurants. Please check your connection.",
+                            ),
+                            duration: const Duration(seconds: 3),
                           ),
-                        ),
-                      RestaurantListLoadedState(data: var restaurantList) =>
-                        restaurantList.isEmpty
-                            ? const Center(
-                                child: Text('No restaurants found.'),
-                              )
-                            : ListView.builder(
-                                itemCount: restaurantList.length,
-                                itemBuilder: (context, index) {
-                                  final restaurant = restaurantList[index];
-                                  return RestaurantCard(
-                                    restaurant: restaurant,
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        NavigationRoute.detailRoute.name,
-                                        arguments: restaurant.id,
-                                      );
-                                    },
-                                  );
-                                },
+                        );
+                      });
+
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Could not load restaurant data.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: RestaurantColor.primary.color,
                               ),
-                      RestaurantListErrorState(error: var message) => Center(
-                          child: Text(message),
+                              onPressed: () {
+                                context
+                                    .read<RestaurantListProvider>()
+                                    .fetchListRestaurant();
+                              },
+                              child: const Text("Retry"),
+                            ),
+                          ],
                         ),
-                      _ => const SizedBox(),
-                    };
+                      );
+                    } else {
+                      return const SizedBox();
+                    }
                   },
                 ),
               ),
